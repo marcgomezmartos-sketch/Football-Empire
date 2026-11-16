@@ -17,7 +17,7 @@ import {SUPABASE_URL,SUPABASE_ANON_KEY} from './config.js';
 const sb=createClient(SUPABASE_URL,SUPABASE_ANON_KEY),$=id=>document.getElementById(id);
 let user=null,game=null,playing=false,saveQueue=Promise.resolve(),epoch=0;
 const roles=['POR','CIERRE','ALA','ALA','PÍVOT'],formations=['3-1','2-2','4-0'],pressures=['BAJA','MEDIA','ALTA'],styles=['POSESIÓN','CONTRAATAQUE','PRESIÓN'];
-const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const names=['Atlético Norte','Inter Sala','Racing FS','Unión Futsal','Ciudad Deportiva','Estrella FS','Sporting Sur','Marina Sala','Olímpico FS','Real Barrio'];
 const makePlayers=()=>roles.map((pos,i)=>({id:crypto.randomUUID(),name:'Jugador '+(i+1),number:i+1,pos,rating:rand(28,38),energy:100}));
