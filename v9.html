@@ -85,7 +85,7 @@ function v9init(g=game){
  g.players.forEach((p,i)=>{p.injured??=0;p.energy??=100;p.clause??=Math.round(v9base(p)*1.8);p.id??=crypto.randomUUID();p.number??=i+1});
  while(g.players.length<8){const i=g.players.length;g.players.push({id:crypto.randomUUID(),name:v9n(),number:i+1,pos:v9roles[i],rating:Math.max(24,Math.min(99,Math.round(g.players.slice(0,5).reduce((a,p)=>a+p.rating,0)/5)-rand(5,15))),energy:100,injured:0,clause:18000,goals:0,assists:0,seasonGoals:0,seasonAssists:0,mvps:0,seasonMvps:0,yellows:0,reds:0,cleanSheets:0})}
  if(!v.market.length){for(let i=0;i<9;i++)v.market.push(v9candidate(g))}
- if(!Object.keys(v.rivals).length){names.forEach((n,i)=>v.rivals[n]={money:30000+i*13000,players:Array.from({length:8},(_,j)=>({...v9candidate(g),pos:v9roles[j]}))})}
+ if(!Object.keys(v.rivals).length){names.forEach((n,i)=>v.rivals[n]={money:120000+i*145000,players:Array.from({length:8},(_,j)=>({...v9candidate(g),pos:v9roles[j]}))})}
  if(!v.cup||v.cup.season!==g.season)v.cup={season:g.season,round:0,eliminated:false,champion:false,history:[]};
  if(!v.supercup||v.supercup.season!==g.season)v.supercup={season:g.season,played:false,won:false};
  if(!v.imperial||v.imperial.season!==g.season){
@@ -101,7 +101,7 @@ function v9candidate(g){const rating=Math.min(99,Math.max(30,rand(36,Math.min(99
 function v9news(msg,g=game){g.v9.news.unshift({season:g.season,round:g.round,text:msg});g.v9.news=g.v9.news.slice(0,65)}
 function v9refresh(){if(!game)return;v9init();v9marketRender();v9arenaRender();v9worldRender();v9cupRender();v9squadRender();}
 const v9oldRender=render;render=function(){v9oldRender();if(game)v9refresh()};
-const v9oldShowTab=showTab;
+
 function v9squadRender(){
  const box=$('roster');box.querySelectorAll('[data-v9inj]').forEach(x=>x.remove());
  const frag=document.createElement('div');frag.dataset.v9inj='1';frag.innerHTML='<h3>🪑 Suplentes y lesiones</h3>'+game.players.map((p,i)=>'<div class="player"><span>'+esc(p.name)+' · '+esc(p.pos)+' · MED '+p.rating+' <small>'+(i<5?'TITULAR':'SUPLENTE')+(p.injured?' · 🏥 Baja '+p.injured+' partidos':' · ⚡ '+Math.round(p.energy)+'%')+'</small></span><button data-v9line="'+i+'">'+(i<5?'Cambiar':'Alinear')+'</button></div>').join('');
@@ -155,6 +155,7 @@ function v9seasonEnd(){
  v.titleDrought=title?0:v.titleDrought+1;if(title){v.leagueTitles++;v9news('🏆 '+game.name+' gana el título de Liga')}
  const crisis=game.division===1&&(failure||ultimatum||v.titleDrought>=3||position>=7);
  const oldDivision=game.division,oldSeason=game.season;
+ const rivals=['Inter Sala','Racing FS','Atlético Norte','Marina Sala'];v9news('📰 '+rivals[rand(0,3)]+' protagoniza el mercado de verano');v9news('📈 '+rivals[rand(0,3)]+' celebra un ascenso; '+rivals[rand(0,3)]+' lucha por evitar el descenso');
  if(crisis){game.money=Math.floor(game.money*.5);game.players.forEach(p=>p.rating=Math.max(20,p.rating-20));game.division=2;v.titleDrought=0;v9news('🚨 CRISIS IMPERIAL: descenso a Segunda, −50% dinero y −20 de media')}
  else if(game.points>=22&&game.division>1){game.division--;v9news('⬆️ '+game.name+' asciende a '+game.division+'ª División')}
  else if(game.points<9&&game.division<7){game.division++;v9news('⬇️ '+game.name+' desciende a '+game.division+'ª División')}
@@ -190,7 +191,7 @@ $('start').onclick=async()=>{
  hero('🏟️ ¡RUEDA EL BALÓN!',g.name+' vs '+r.name+' · '+seconds+' segundos');
  beginMotion();playSound('whistle');
  for(let i=0;i<steps;i++){
-  if(!v9skip)await v9wait(interval);
+  if(!v9skip)await v9wait(interval);else if(i%8===0)await v9wait(0);
   if(!user||game!==g){playing=false;stopMotion();return}
   const minute=Math.floor(i/steps*40),attack=Math.random()<.53+(adv-.5)*.35,prob=attack?adv:1-adv;
   if(motion){motion.phase=i;motion.attack=attack;motion.ballX=attack?100+i%5*100:540-i%5*100;motion.ballY=70+rand(0,260)}
@@ -204,7 +205,7 @@ $('start').onclick=async()=>{
   g.players.slice(0,5).forEach(p=>p.energy=Math.max(30,p.energy-(g.pressure==='ALTA'?1.9:1.25)));
   $('score').textContent=g.name+' '+gf+' - '+ga+' '+r.name;
   $('clock').textContent=Math.floor(i/steps*40)+"'";
-  if(v9skip)break;
+  if(v9skip)continue;
  }
  stopMotion();playSound(gf>ga?'win':'whistle');
  const win=gf>ga,draw=gf===ga,other=l.teams[fixture.opponent];
