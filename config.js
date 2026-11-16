@@ -1,4 +1,3 @@
-// Completa estos dos valores desde Supabase > Project Settings > API.
-// Usa SOLO la clave pública anon/publishable. Nunca pegues service_role ni claves secretas.
-export const SUPABASE_URL = '';
-export const SUPABASE_ANON_KEY = '';
+// Public frontend credentials only. Do not place secret or service_role keys here.
+export const SUPABASE_URL = 'https://vtjdfqrbuaebrdldoyoy.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_cgmaM0YpKMnLnTC9u7fFLw_JUJgtdZo';
